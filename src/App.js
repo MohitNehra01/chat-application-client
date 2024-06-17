@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+
 import './App.css';
 
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast';
+
+import Home from './page/Home';
+import Signup from './page/Signup';
+import Login from './page/Login';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from './context/AccountProvider';
+
+
 function App() {
+         const {setAuthenticated , setAccount} = useContext(AuthContext)
+
+      useEffect(()=>{
+               if(localStorage.getItem('auth_token') !== null){
+                setAuthenticated(true);
+                setAccount(JSON.parse(localStorage.getItem('Login_user')))
+               }
+               else{
+                setAccount('');
+                setAuthenticated(false)
+               }
+               // eslint-disable-next-line
+      },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+      <Toaster />
+        <Routes>
+          <Route exact path='/' element={<Home />}></Route>
+          <Route exact path='/signup' element={<Signup />}></Route>
+          <Route exact path='/login' element={<Login />}></Route>
+        </Routes>
+
+      </BrowserRouter>
+    </>
   );
 }
 
